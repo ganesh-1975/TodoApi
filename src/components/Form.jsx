@@ -137,13 +137,13 @@ function Form({ url }) {
           <div className="flex gap-2">
             <input
               {...register("task")}
-              className="w-[90%] p-3 rounded-lg border mb-2 focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-600"
+              className="w-[87%] p-3 rounded-lg border mb-2 focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-600"
               type="text"
               placeholder="e.g. Learn Javascript"
             />
             <input
               {...register("dueDate")}
-              className="w-[10%] cursor-pointer p-3 rounded-lg border mb-2 focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-600"
+              className="w-[13%]  p-3 rounded-lg border mb-2 focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-600"
               type="datetime-local"
             />
           </div>
