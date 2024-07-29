@@ -1,12 +1,33 @@
 import React, { useState } from "react";
 import Loader from "./Loader";
 
-function TodoCard({ task, dueDate, taskCompleted, handleDelete, id, status }) {
+function TodoCard({
+  task,
+  dueDate,
+  taskCompleted,
+  handleDelete,
+  handleEdit,
+  id,
+  status,
+  isEditing,
+  setIsEditing,
+  editStatus,
+}) {
   const [deleteStatus, setdeleteStatus] = useState(false);
+  const [currentText, setCurrentText] = useState(task);
+
   function handleDeleteClick() {
     handleDelete(id);
     setdeleteStatus(true);
   }
+
+  function handleDoubleClick() {
+    setIsEditing(true);
+  }
+
+  const handleEditChange = (e) => {
+    setCurrentText(e.target.value);
+  };
 
   return (
     <div className="w-[360px] mx-auto mt-5 ">
@@ -17,7 +38,20 @@ function TodoCard({ task, dueDate, taskCompleted, handleDelete, id, status }) {
             : "border border-neutral-200 bg-neutral-0 mb-3  rounded-xl p-3"
         }
       >
-        <p>{task}</p>
+        {isEditing ? (
+          <input
+            className="outline-none"
+            type="text"
+            value={currentText}
+            onBlur={(e) => handleEdit(id, e)}
+            onChange={(e) => handleEditChange(e)}
+            autoFocus
+          />
+        ) : (
+          <p onDoubleClick={handleDoubleClick}>
+            {editStatus ? <Loader /> : task}
+          </p>
+        )}
         <p className=" text-[14px] font-light  text-neutral-700">{dueDate}</p>
         <div className="flex gap-4 ">
           <button
