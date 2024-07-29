@@ -11,7 +11,6 @@ function TodoCard({
   status,
   isEditing,
   setIsEditing,
-  editStatus,
 }) {
   const [deleteStatus, setdeleteStatus] = useState(false);
   const [currentText, setCurrentText] = useState(task);
@@ -48,9 +47,7 @@ function TodoCard({
             autoFocus
           />
         ) : (
-          <p onDoubleClick={handleDoubleClick}>
-            {editStatus ? <Loader /> : task}
-          </p>
+          <p onDoubleClick={handleDoubleClick}>{task}</p>
         )}
         <p className=" text-[14px] font-light  text-neutral-700">{dueDate}</p>
         <div className="flex gap-4 ">
