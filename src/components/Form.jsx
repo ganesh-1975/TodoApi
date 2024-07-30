@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import Loader from "./Loader";
 import TodoCard from "./TodoCard";
+import { useUser } from "@clerk/clerk-react";
 
 //Interceptor
 axios.interceptors.request.use(
@@ -26,6 +27,8 @@ function Form({ url }) {
   const [todos, settodos] = useState([]);
   const [editingStates, setEditingStates] = useState({});
 
+  const { user, isSignedIn } = useUser();
+
   const options = {
     weekday: "long",
     year: "numeric",
@@ -43,7 +46,12 @@ function Form({ url }) {
     setformStatus(true);
     reset();
     axios
-      .post(`${url}todos.json`, { ...data, dueDate: fDate, status: false })
+      .post(`${url}todos.json`, {
+        ...data,
+        dueDate: fDate,
+        status: false,
+        createdBy: user.username,
+      })
       .then(() => {
         setformStatus(false);
         fetchTodos();
@@ -124,7 +132,10 @@ function Form({ url }) {
       </div>
       <div className="w-[360px] mx-auto mt-10">
         <h1 className="text-xl text-black font-bold">
-          Manage your task <span className="text-neutral-600">@ganesh</span>
+          Manage your task{" "}
+          <span className="text-neutral-600">
+            @{isSignedIn ? user.fullName : "your name"}
+          </span>
         </h1>
         <p className="text-neutral-600">
           Add your tasks and start organizing them quickly.
@@ -171,22 +182,24 @@ function Form({ url }) {
         </form>
       </div>
 
-      {todos.map((todo) => (
-        <TodoCard
-          task={todo.task}
-          dueDate={todo.dueDate}
-          status={todo.status}
-          key={todo.id}
-          id={todo.id}
-          handleDelete={handleDelete}
-          taskCompleted={taskCompleted}
-          handleEdit={handleEdit}
-          isEditing={editingStates[todo.id] || false}
-          setIsEditing={(state) =>
-            setEditingStates((prev) => ({ ...prev, [todo.id]: state }))
-          }
-        />
-      ))}
+      {todos
+        .filter((todo) => (isSignedIn ? todo.createdBy == user.username : true))
+        .map((todo) => (
+          <TodoCard
+            task={todo.task}
+            dueDate={todo.dueDate}
+            status={todo.status}
+            key={todo.id}
+            id={todo.id}
+            handleDelete={handleDelete}
+            taskCompleted={taskCompleted}
+            handleEdit={handleEdit}
+            isEditing={editingStates[todo.id] || false}
+            setIsEditing={(state) =>
+              setEditingStates((prev) => ({ ...prev, [todo.id]: state }))
+            }
+          />
+        ))}
     </div>
   );
 }
