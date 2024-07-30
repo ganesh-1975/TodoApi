@@ -24,7 +24,7 @@ function Form({ url }) {
   const [taskInitiated, settaskInitiated] = useState(false);
   const [formStatus, setformStatus] = useState(false);
   const [todos, settodos] = useState([]);
-  const [isEditing, setIsEditing] = useState(false);
+  const [editingStates, setEditingStates] = useState({});
 
   const options = {
     weekday: "long",
@@ -100,8 +100,7 @@ function Form({ url }) {
     }
   }
 
-  function handleEdit(id, e) {
-    let updatedTask = e.target.value;
+  function handleEdit(id, updatedTask) {
     axios
       .patch(`${url}todos/${id}.json`, { task: updatedTask })
       .then(() => {
@@ -111,7 +110,7 @@ function Form({ url }) {
         console.error("There was an error updating the task!", error);
       });
 
-    setIsEditing(false);
+    setEditingStates((prev) => ({ ...prev, [id]: false }));
   }
 
   useEffect(() => {
@@ -182,8 +181,10 @@ function Form({ url }) {
           handleDelete={handleDelete}
           taskCompleted={taskCompleted}
           handleEdit={handleEdit}
-          isEditing={isEditing}
-          setIsEditing={setIsEditing}
+          isEditing={editingStates[todo.id] || false}
+          setIsEditing={(state) =>
+            setEditingStates((prev) => ({ ...prev, [todo.id]: state }))
+          }
         />
       ))}
     </div>

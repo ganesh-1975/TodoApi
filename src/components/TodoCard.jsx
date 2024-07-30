@@ -42,8 +42,8 @@ function TodoCard({
             className="outline-none"
             type="text"
             value={currentText}
-            onBlur={(e) => handleEdit(id, e)}
-            onChange={(e) => handleEditChange(e)}
+            onBlur={() => handleEdit(id, currentText)}
+            onChange={handleEditChange}
             autoFocus
           />
         ) : (
